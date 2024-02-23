@@ -1,0 +1,19 @@
+﻿@model IEnumerable<LanchesMac.Models.Lanche>
+
+@{
+    ViewData["Title"] = "List";
+}
+
+<h1>Todos os Lanches</h1>
+
+<p>
+    <a asp-action="Create">Novo Lanche</a>
+</p>
+@foreach (var item in Model)
+{
+    <div class="card col-md-4" style="width: 18rem;">
+        <h4>@item.Nome</h4>
+        <img src="@item.ImagemUrl" class="card-img-top" alt="@item.Nome">
+        <h3>Preço : @item.Preco.ToString("c")</h3>
+    </div>
+}
