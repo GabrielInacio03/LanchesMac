@@ -20,7 +20,12 @@ public class Startup
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConneciton"))
         );
 
-        //injeção de dependência, registrando Repository
+        /*
+         Em resumo, esse trecho de código está configurando a injeção de dependência para o   serviço
+         ILancheRepository, indicando que sempre que houver uma solicitação para ILancheRepository, 
+         deve ser fornecida uma nova instância de LancheRepository. Isso facilita a manutenção, teste
+         e substituição de implementações de serviços sem modificar o restante do código.
+         */
         services.AddTransient<ILancheRepository, LancheRepository>();
         services.AddTransient<ICategoriaRepository, CategoriaRepository>();
 
