@@ -10,7 +10,6 @@
     <a asp-action="Create">Novo Lanche</a>
 </p>
 <hr />
-<p>Total Lanches: @ViewBag.TotalLanches</p>
 @foreach (var item in Model)
 {
     <div class="card col-md-4" style="width: 18rem;">
@@ -21,4 +20,3 @@
 }
 
 <hr />
-<p>@TempData["Nome"];</p>
