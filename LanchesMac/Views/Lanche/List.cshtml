@@ -1,14 +1,16 @@
 ﻿@model IEnumerable<LanchesMac.Models.Lanche>
 
 @{
-    ViewData["Title"] = "List";
+    ViewData["Title"] = "Todos os Lanches";
 }
 
-<h1>Todos os Lanches</h1>
+<h1>@ViewData["Title"]</h1>
 
 <p>
     <a asp-action="Create">Novo Lanche</a>
 </p>
+<hr />
+<p>Total Lanches: @ViewBag.TotalLanches</p>
 @foreach (var item in Model)
 {
     <div class="card col-md-4" style="width: 18rem;">
@@ -17,3 +19,6 @@
         <h3>Preço : @item.Preco.ToString("c")</h3>
     </div>
 }
+
+<hr />
+<p>@TempData["Nome"];</p>

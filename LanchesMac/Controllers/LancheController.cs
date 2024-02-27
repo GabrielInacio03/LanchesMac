@@ -16,6 +16,9 @@ namespace LanchesMac.Controllers
         public IActionResult List()
         {
             var lanches = _lancheRepository.Lanches;
+
+            var totalLanches = lanches.Count();
+            ViewBag.TotalLanches = totalLanches;
             return View(lanches);
         }
     }
