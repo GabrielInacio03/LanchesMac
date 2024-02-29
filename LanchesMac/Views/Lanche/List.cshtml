@@ -5,18 +5,19 @@
 }
 
 <h1>@ViewData["Title"]</h1>
-
 <p>
     <a asp-action="Create">Novo Lanche</a>
 </p>
 <hr />
-@foreach (var item in Model)
-{
-    <div class="card col-md-4" style="width: 18rem;">
-        <h4>@item.Nome</h4>
-        <img src="@item.ImagemUrl" class="card-img-top" alt="@item.Nome">
-        <h3>Preço : @item.Preco.ToString("c")</h3>
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <h4>@item.Nome</h4>
+                <img src="@item.ImagemUrl" class="card-img-top" alt="@item.Nome">
+                <h3>Preço : @item.Preco.ToString("c")</h3>
+            </div>
+        }
     </div>
-}
-
-<hr />
+</div>
