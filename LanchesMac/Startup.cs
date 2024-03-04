@@ -19,7 +19,17 @@ public class Startup
         services.AddDbContext<AppDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("DefaultConneciton"))
         );
+        services.AddMemoryCache();
+        services.AddSession();
+        /*
+        services.AddSession(options =>
+        {
+            options.IOTimeout = TimeSpan.FromSeconds(10);
+            options.Cookie.HttpOnly = true;
+            options.Cookie.IsEssential = true;
 
+        });
+        */
         /*
          Em resumo, esse trecho de código está configurando a injeção de dependência para o   serviço
          ILancheRepository, indicando que sempre que houver uma solicitação para ILancheRepository, 
@@ -29,7 +39,12 @@ public class Startup
         services.AddTransient<ILancheRepository, LancheRepository>();
         services.AddTransient<ICategoriaRepository, CategoriaRepository>();
 
+
+        //vai valer por todo tempo de vida do meu app
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
         services.AddControllersWithViews();
+       
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +66,8 @@ public class Startup
         app.UseRouting();
 
         app.UseAuthorization();
+
+        app.UseSession();
 
         app.UseEndpoints(endpoints =>
         {
