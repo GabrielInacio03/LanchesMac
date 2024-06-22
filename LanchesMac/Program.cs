@@ -1,4 +1,9 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using LanchesMac.Data;
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<LanchesMacContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("LanchesMacContext") ?? throw new InvalidOperationException("Connection string 'LanchesMacContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
