@@ -7,34 +7,36 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using LanchesMac.Data;
 using LanchesMac.Models;
+using LanchesMac.Repositories.Interface;
+using LanchesMac.Repositories.Repository;
 
 namespace LanchesMac.Controllers
 {
     public class LanchesController : Controller
     {
-        private readonly LanchesMacContext _context;
+        private readonly ILanche _lancheRepository;
 
-        public LanchesController(LanchesMacContext context)
+        public LanchesController(ILanche lancheRepository)
         {
-            _context = context;
+            _lancheRepository = lancheRepository;
         }
 
         // GET: Lanches
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Lanche.ToListAsync());
+              return View(_lancheRepository.lanches.ToList());
         }
 
         // GET: Lanches/Details/5
-        public async Task<IActionResult> Details(long? id)
+        public IActionResult Details(long? id)
         {
-            if (id == null || _context.Lanche == null)
+            if (id == null || _lancheRepository == null)
             {
                 return NotFound();
             }
 
-            var lanche = await _context.Lanche
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var lanche =  _lancheRepository.lanchesPreferidos
+                .FirstOrDefault(m => m.Id == id);
             if (lanche == null)
             {
                 return NotFound();
@@ -55,8 +57,8 @@ namespace LanchesMac.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(lanche);
-                await _context.SaveChangesAsync();
+                _lancheRepository.Save(lanche);
+                
                 return RedirectToAction(nameof(Index));
             }
             return View(lanche);
@@ -65,12 +67,11 @@ namespace LanchesMac.Controllers
         // GET: Lanches/Edit/5
         public async Task<IActionResult> Edit(long? id)
         {
-            if (id == null || _context.Lanche == null)
+            if (id == null || _lancheRepository == null)
             {
                 return NotFound();
             }
-
-            var lanche = await _context.Lanche.FindAsync(id);
+            var lanche = _lancheRepository.GetId(id);
             if (lanche == null)
             {
                 return NotFound();
@@ -78,9 +79,6 @@ namespace LanchesMac.Controllers
             return View(lanche);
         }
 
-        // POST: Lanches/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(long id, [Bind("Id,Nome,Descricao,Preco,Ativo")] Lanche lanche)
@@ -94,9 +92,7 @@ namespace LanchesMac.Controllers
             {
                 try
                 {
-                    _context.Update(lanche);
-                    await _context.SaveChangesAsync();
-                }
+                    _lancheRepository.Update(lanche);                }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!LancheExists(lanche.Id))
@@ -116,13 +112,12 @@ namespace LanchesMac.Controllers
         // GET: Lanches/Delete/5
         public async Task<IActionResult> Delete(long? id)
         {
-            if (id == null || _context.Lanche == null)
+            if (id == null || _lancheRepository == null)
             {
                 return NotFound();
             }
 
-            var lanche = await _context.Lanche
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var lanche = _lancheRepository.GetId(id);
             if (lanche == null)
             {
                 return NotFound();
@@ -136,23 +131,22 @@ namespace LanchesMac.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
-            if (_context.Lanche == null)
+            if (_lancheRepository == null)
             {
                 return Problem("Entity set 'LanchesMacContext.Lanche'  is null.");
             }
-            var lanche = await _context.Lanche.FindAsync(id);
+            var lanche =  _lancheRepository.GetId(id);
             if (lanche != null)
             {
-                _context.Lanche.Remove(lanche);
+                _lancheRepository.Remove(lanche);
             }
             
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool LancheExists(long id)
         {
-          return _context.Lanche.Any(e => e.Id == id);
+          return _lancheRepository.lanches.Any(x => x.Id == id);
         }
     }
 }
